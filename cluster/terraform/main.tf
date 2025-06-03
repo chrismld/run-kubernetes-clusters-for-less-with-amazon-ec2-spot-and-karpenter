@@ -78,7 +78,7 @@ data "aws_availability_zones" "available" {
 }
 
 locals {
-  name            = "spot-and-karpenter"
+  name            = "karpenter-spot"
   cluster_version = "1.33"
   region          = var.region
   node_group_name = "managed-ondemand"

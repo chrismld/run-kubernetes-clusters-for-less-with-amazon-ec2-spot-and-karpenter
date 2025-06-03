@@ -598,6 +598,14 @@ Resources:
                 - sudo install -o root -g root -m 0755 kubectl /bin/kubectl
                 - kubectl version --client --output=yaml 
           - action: aws:runShellScript
+            name: InstallHelm
+            inputs:
+              runCommand:
+                - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+                - sudo chmod 700 get_helm.sh
+                - sudo ./get_helm.sh
+                - helm version
+          - action: aws:runShellScript
             name: InstallEKSNodeViewer
             inputs:
               runCommand:
@@ -865,7 +873,7 @@ Resources:
               - Key: SSMBootstrap
                 Value: arm64
               - Key: Name
-                Value: "GravitonInstance"
+                Value: "VSCodeServer"
 
   AutoScalingGroupVSCodeArm:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -962,10 +970,6 @@ Outputs:
   Password:
     Description: VSCode-Server Password
     Value: !GetAtt SecretPlaintext.password
-    Export:
-      Name: !Sub ${AWS::StackName}-Password
-  GravitonURL:
+  VSCodeURL:
     Description: VSCode-Server URL
     Value: !Sub https://${ArmCloudFrontDistribution.DomainName}/?folder=${HomeFolder}
-    Export:
-      Name: !Sub ${AWS::StackName}-GravitonURL
